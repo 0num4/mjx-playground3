@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "mjx-playground"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "mjx_playground"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+mjx = "^0.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
