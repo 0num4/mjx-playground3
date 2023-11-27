@@ -1,4 +1,5 @@
-from torch import optim, nn  # utils, Tensor
+import torch
+from torch import optim, nn, utils, Tensor
 import pytorch_lightning as pl
 
 """
@@ -31,3 +32,17 @@ class MLP(pl.LightningModule):
 
     def forward(self, x):
         return self.net(x.float())
+    
+
+import numpy as np
+inps = np.load("./shanten_obs.npy")
+tgts = np.load("./shanten_actions.npy")
+
+from torch.utils.data import TensorDataset, DataLoader
+dataset = TensorDataset(torch.Tensor(inps), torch.LongTensor(tgts))
+loader = DataLoader(dataset, batch_size=2)
+
+model = MLP()
+trainer = pl.Trainer(max_epochs=1)
+trainer.fit(model=model, train_dataloaders=loader)
+torch.save(model.state_dict(), './model_shanten_100.pth')
