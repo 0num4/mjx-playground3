@@ -11,7 +11,16 @@ python = "^3.9"
 mjx = "^0.1.0"
 numpy = "^1.26.2"
 tqdm = "^4.66.1"
+torch = {version = "^2.1.1+cu118", source = "torch_cu118"}
+torchvision = {version = "^0.16.1+cu118", source = "torch_cu118"}
+torchaudio = {version = "^2.1.1+cu118", source = "torch_cu118"}
+pytorch-lightning = "^2.1.2"
 
+
+[[tool.poetry.source]]
+name = "torch_cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
 
 [build-system]
 requires = ["poetry-core"]
