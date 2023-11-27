@@ -9,6 +9,8 @@ packages = [{include = "mjx_playground"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 mjx = "^0.1.0"
+numpy = "^1.26.2"
+tqdm = "^4.66.1"
 
 
 [build-system]
