@@ -20,7 +20,7 @@ GymEnvはmjx.envのreset()とstep()を上書きしてるっぽい
 mjx.env()
 https://vscode.dev/github/0num4/mjx-playground3/blob/mainpda-py3.9/lib/python3.9/site-packages/mjx/env.py#L11
 
-
+実行結果
 上がrandombotで下がshantenbot
 
 ```

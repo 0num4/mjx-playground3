@@ -1,1 +1,4 @@
 *.npy
+*.pth
+*.ckpt
+*.pyc

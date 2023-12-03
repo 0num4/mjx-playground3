@@ -139,33 +139,33 @@ class REINFORCE:
         self.entropy = 0
 
 
-# %%
-random_agent = RandomAgent()
-env = GymEnv(
-    opponent_agents=[random_agent, random_agent, random_agent],
-    reward_type="game_tenhou_7dan",
-    done_type="game",
-    feature_type="mjx-small-v0",
-)
+# # %%
+# random_agent = RandomAgent()
+# env = GymEnv(
+#     opponent_agents=[random_agent, random_agent, random_agent],
+#     reward_type="game_tenhou_7dan",
+#     done_type="game",
+#     feature_type="mjx-small-v0",
+# )
 
-model = nn.Sequential(nn.Linear(16 * 34, 128), nn.ReLU(), nn.Linear(128, 128), nn.ReLU(), nn.Linear(128, 181))
-opt = optim.Adam(model.parameters(), lr=0.1)
-agent = REINFORCE(model, opt)
+# model = nn.Sequential(nn.Linear(16 * 34, 128), nn.ReLU(), nn.Linear(128, 128), nn.ReLU(), nn.Linear(128, 181))
+# opt = optim.Adam(model.parameters(), lr=0.1)
+# agent = REINFORCE(model, opt)
 
-avg_R = 0.0
-for i in range(1_000_000):
-    if i % 100 == 0:
-        print(i, avg_R, flush=True)
-    obs, info = env.reset()
-    done = False
-    R = 0
-    while not done:
-        a = agent.act(obs, info["action_mask"])
-        # a = take_random_action(info["action_mask"])
-        obs, r, done, info = env.step(a)
-        R += r
+# avg_R = 0.0
+# for i in range(1_000_000):
+#     if i % 100 == 0:
+#         print(i, avg_R, flush=True)
+#     obs, info = env.reset()
+#     done = False
+#     R = 0
+#     while not done:
+#         a = agent.act(obs, info["action_mask"])
+#         # a = take_random_action(info["action_mask"])
+#         obs, r, done, info = env.step(a)
+#         R += r
 
-    agent.update_gradient(R)
-    avg_R = avg_R * 0.99 + R * 0.01
+#     agent.update_gradient(R)
+#     avg_R = avg_R * 0.99 + R * 0.01
 
-# %%
+# # %%
