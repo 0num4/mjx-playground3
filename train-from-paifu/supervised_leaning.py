@@ -1,42 +1,4 @@
-from mjx import Observation, State, Action
-import numpy as np 
-import glob
-# mjxproto_dirから全ての牌譜を読み込む
-
-obs_hist = []
-action_hist = []
-
-for file in glob.glob("mjxproto_dir/*.json"):
-    print(file)
-    with open(file) as f:
-        lines = f.readlines()
-
-        obs_hist_internal = []
-        action_hist_internal = []
-
-        for line in lines:
-            state = State(line)
-
-            # print(np.stack(state._cpp_obj.past_decisions()))
-            for cpp_obs, cpp_act in state._cpp_obj.past_decisions():
-                obs = Observation._from_cpp_obj(cpp_obs)
-                feature = obs.to_features(feature_name="mjx-small-v0")
-
-                action = Action._from_cpp_obj(cpp_act)
-                action_idx = action.to_idx()
-
-                obs_hist.append(feature.ravel())
-                action_hist.append(action_idx)
-
-        print(np.stack(obs_hist).shape)
-        print(np.array(action_hist, dtype=np.int32).shape)
-
-print(np.stack(obs_hist).shape)
-print(np.array(action_hist, dtype=np.int32).shape)
-np.save("shanten_obs_full.npy", np.stack(obs_hist))
-np.save("shanten_actions_full.npy", np.array(action_hist, dtype=np.int32))
-
-
+import torch
 from torch import optim, nn, utils, Tensor
 import pytorch_lightning as pl
 
