@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "cwd": "${workspaceFolder}/supervised_learning_from_shantenBot",
+            "cwd": "${workspaceFolder}/train-from-paifu",
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true
