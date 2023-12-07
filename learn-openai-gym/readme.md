@@ -10,3 +10,7 @@ https://zenn.dev/megane_otoko/articles/074_simple_pytorch
 
 https://qiita.com/tetsuro731/items/d64b9bbb8de6874b7064
 
+# memo
+landarは動いた。(画面に描写して学習しているところまで見えた)
+
+mountaincarもcatepoleも動いたがgym wrapperとかが変わりすぎたのでgymnasiumを使おうと思う。
