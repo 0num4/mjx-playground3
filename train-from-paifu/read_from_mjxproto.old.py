@@ -1,22 +1,25 @@
-from concurrent.futures import ProcessPoolExecutor
+# 
 from mjx import Observation, State, Action
-import numpy as np
+import numpy as np 
 import glob
 from tqdm import tqdm
 # mjxproto_dirから全ての牌譜を読み込む
 
-batch_size = 2000
+obs_hist = []
+action_hist = []
 
-
-def process_file(file):
-    obs_hist = []
-    action_hist = []
-
+for file in tqdm(glob.glob("paifu_mjxproto/*.json")):
+    print(file)
     with open(file) as f:
         lines = f.readlines()
 
+        obs_hist_internal = []
+        action_hist_internal = []
+
         for line in lines:
             state = State(line)
+
+            # print(np.stack(state._cpp_obj.past_decisions()))
             for cpp_obs, cpp_act in state._cpp_obj.past_decisions():
                 obs = Observation._from_cpp_obj(cpp_obs)
                 feature = obs.to_features(feature_name="mjx-small-v0")
@@ -27,31 +30,13 @@ def process_file(file):
                 obs_hist.append(feature.ravel())
                 action_hist.append(action_idx)
 
-    return np.stack(obs_hist), np.array(action_hist, dtype=np.int32)
+        print(np.stack(obs_hist).shape)
+        print(np.array(action_hist, dtype=np.int32).shape)
 
-
-# ファイルのリストを取得
-files = glob.glob("paifu_mjxproto/*.json")
-
-# 並列処理
-with ProcessPoolExecutor() as executor:
-    results = list(tqdm(executor.map(process_file, files), total=len(files)))
-
-# 結果の結合
-all_obs = np.concatenate([obs for obs, _ in results], axis=0)
-all_actions = np.concatenate([actions for _, actions in results], axis=0)
-
-
-
-
-# 結果の結合
-all_obs = np.concatenate([obs for obs, _ in results], axis=0)
-all_actions = np.concatenate([actions for _, actions in results], axis=0)
-
-# 結果を保存
-np.save("shanten_obs_full.npy", all_obs)
-np.save("shanten_actions_full.npy", all_actions)
-
+print(np.stack(obs_hist).shape)
+print(np.array(action_hist, dtype=np.int32).shape)
+np.save("shanten_obs_full_full.npy", np.stack(obs_hist))
+np.save("shanten_actions_full_full.npy", np.array(action_hist, dtype=np.int32))
 
 import torch
 from torch import optim, nn, utils, Tensor

@@ -1,27 +1,17 @@
-# 作ったMLPのagentと、ShantenAgentを対戦させる
-
 import mjx
 from mjx.agents import ShantenAgent, RandomAgent
 import json
 import numpy as np
 import tqdm
 import torch
+from torch import optim
 import torch.nn as nn
 # import nn_samplecode
 import rl_gym
 import pytorch_lightning as pl
+from mjx import Agent, Observation, Action
 
 # env = mjx.MjxEnv()
-
-# random_agent = RandomAgent()
-shanten_agent = ShantenAgent()
-env = rl_gym.GymEnv(
-    opponent_agents=[shanten_agent, shanten_agent, shanten_agent],
-    reward_type="game_tenhou_7dan",
-    done_type="game",
-    feature_type="mjx-small-v0",
-)
-obs, info = env.reset()  # state
 
 
 # Agentの入力になるObservation（観測）には、プレイヤーの席順、点数、手配、捨て牌など様々な情報が含まれています。
@@ -45,12 +35,58 @@ class MLP(pl.LightningModule):
         self.log("train_loss", loss)
         return loss
 
-    # def configure_optimizers(self):
-    #     optimizer = optim.Adam(self.parameters(), lr=1e-3)
-    #     return optimizer
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        return optimizer
 
     def forward(self, x):
         return self.net(x.float())
+
+
+old_mlp_model = MLP()
+old_mlp_model.load_state_dict(torch.load('./model_paifu_1_bactch_size1024_10epochs.pth'))
+
+# loadstatedictだけでよい？optチューニングとかはできない？
+# opt = optim.Adam(old_mlp_model.parameters(), lr=1e-3)
+# old_mlp_rainforcement_agent = rl_gym.REINFORCE(old_mlp_model, opt)
+
+class MLPAgent(mjx.Agent):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def act(self, observation: Observation) -> Action:
+        legal_actions = observation.legal_actions()
+        if len(legal_actions) == 1:
+            return legal_actions[0]
+        
+        # 予測
+        feature = observation.to_features(feature_name="mjx-small-v0")
+        with torch.no_grad():
+            action_logit = old_mlp_model(torch.Tensor(feature.ravel()))
+        action_proba = torch.sigmoid(action_logit).numpy()
+        
+        # アクション決定
+        mask = observation.action_mask()
+        action_idx = (mask * action_proba).argmax()
+        return mjx.Action.select_from(action_idx, legal_actions)
+    
+# random_agent = RandomAgent()
+# shanten_agent = ShantenAgent()
+# shanten_mlp_model = MLP()
+# shanten_mlp_model.load_state_dict(torch.load("./model_paifu_1_bactch_size1024_10epochs.pth"))
+# optimizer = torch.optim.Adam(shanten_mlp_model.parameters(), lr=1e-3)
+# shanten_mlp_agent = rl_gym.REINFORCE(shanten_mlp_model, optimizer)
+
+
+old_mlp_agent = MLPAgent()
+env = rl_gym.GymEnv(
+    opponent_agents=[old_mlp_agent, old_mlp_agent, old_mlp_agent],
+    reward_type="game_tenhou_7dan",
+    done_type="game",
+    feature_type="mjx-small-v0",
+)
+obs, info = env.reset()  # state
 
 mlp_model = MLP()  # クラスを作ってインスタンス化させただけだとまだmodel
 # mlp_model.load_state_dict(torch.load("./model_paifu_1_bactch_size1024_10epochs.pth"))
