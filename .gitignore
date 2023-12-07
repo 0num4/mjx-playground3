@@ -3,3 +3,8 @@
 *.ckpt
 *.pyc
 *.json
+
+# pytorch learning
+*.csv
+*.log
+*.yaml
