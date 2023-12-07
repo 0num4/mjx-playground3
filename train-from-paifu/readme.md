@@ -160,8 +160,15 @@ full_full.pthとfull(read_from_paifu).pthを使って1000半荘回したらこ�
 * supervised_learning2.py・・・train_from_paifu.pyで作ったnpyファイルを読み込んで学習させる。1天鳳位分の牌譜を読み込んで学習させる。
 全天鳳位の牌譜もこれで生成した気がする。1日ぐらいかかるし、めっちゃリソース食う(128GB+swap)。
 
-* supervised_learning3.py・・・supervised_learning2.pyのオリジナルのコピー。1牌譜だけ読み込んで学習させてみたやつ。
-cnn系はどうしても落ちたのでこれで学習させてみた。1天鳳位分は上手く学習してnpyを作れた。(がagentの実行が出来ない)
+* supervised_learning3.py・・・2をchatgptに聞いてカスタムデータローダーなど使うようにしたやつ。
+full_fullは重かったので2でやった。3でもできるかもだけど。
+
+* supervised_learning3-cnn2.py・・・cnn系はどうしても落ちたのでこれで学習させてみた。1天鳳位分は上手く学習してnpyを作れた。(がagentの実行が出来ない)
+___
+以下使わなかった奴
+* supervised_learning2-cnn.py
+* supervised_learning2-cnn2.py
+cnn系のエージェントがそもそも動かなくて困ってる。
 
 ## battle_vs_shantenbots.py系
 
