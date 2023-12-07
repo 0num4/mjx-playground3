@@ -53,7 +53,8 @@ class MLP(pl.LightningModule):
         return self.net(x.float())
 
 mlp_model = MLP()  # クラスを作ってインスタンス化させただけだとまだmodel
-mlp_model.load_state_dict(torch.load("./model_paifu_1_bactch_size1024_10epochs.pth"))
+# mlp_model.load_state_dict(torch.load("./model_paifu_1_bactch_size1024_10epochs.pth"))
+mlp_model.load_state_dict(torch.load("./model_paifu_1_batch_size1024_10epochs_noCustomDataloader_full_full.pth"))
 # mlp_model.parameters()でmodelのすべてのパラメータを取得できる
 # torch.optim.Adam: これは、オプティマイザの一種です。オプティマイザは、ニューラルネットワークの学習過程でモデルの重みを更新するアルゴリズムを指します。Adamはその中でも特に人気のあるオプティマイザで、確率的勾配降下法（SGD）の改良版として広く使われています。
 # optimizerやパラメータチューニングは学習前に行う、つまり今は学習前
@@ -64,7 +65,7 @@ obs_hist = []
 action_hist = []
 rank_hist = []
 
-for game in range(100):  # 100半荘回す
+for game in range(1000):  # 100半荘回す
     obs, info = env.reset()  # ゲーム開始
     done = False
     while not done:
