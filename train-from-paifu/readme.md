@@ -154,3 +154,7 @@ full_full.pthとfull(read_from_paifu).pthを使って1000半荘回したらこ�
 * train_from_paifu.py・・・1天鳳位だけの全ての牌譜をconvert&読み込めるファイルだけに除外したディレクトリから読み込んで学習させるように変換した。200ファイル(半荘)ほど。
 
 * train_from_paifu.new.py・・・全ての天鳳位の牌譜を読み込めるようにした。65909ファイル(半荘)ほど。100GB超えのnpyファイルを作る。1日ぐらいかかるし、めっちゃリソース食う(128GB+swap)。chatgptに聞きながら並列処理や読み込みのバッチ分割などを行った(ログがchatgptのどこかに残ってるはず)
+
+## battle_vs_shantenbots.py系
+
+* mlp_agent_playground.py・・・これが最終的に古い自分の作ったエージェントとバトル出来たコード
