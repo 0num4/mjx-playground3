@@ -2,6 +2,7 @@ import torch
 from torch import optim, nn, utils, Tensor
 import pytorch_lightning as pl
 
+
 class MLP(pl.LightningModule):
     def __init__(self, obs_size=544, n_actions=181, hidden_size=128):
         super().__init__()
