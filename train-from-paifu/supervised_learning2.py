@@ -2,33 +2,6 @@ import torch
 from torch import optim, nn, utils, Tensor
 import pytorch_lightning as pl
 
-
-class ModifiedCNN(pl.LightningModule):
-    def __init__(self, obs_size=544, n_actions=181, hidden_size=128):
-        super().__init__()
-        self.conv_net = nn.Sequential(
-            nn.Conv1d(1, 16, kernel_size=3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, stride=2),
-            nn.Conv1d(16, 32, kernel_size=3, stride=1, padding=1),
-            nn.ReLU(),
-            nn.MaxPool1d(kernel_size=2, stride=2),
-            nn.Flatten()
-        )
-        self.fc_net = nn.Sequential(
-            nn.Linear(32 * (obs_size // 4), hidden_size),
-            nn.ReLU(),
-            nn.Linear(hidden_size, n_actions),
-        )
-        self.loss_module = nn.CrossEntropyLoss()
-
-    def forward(self, x):
-        x = x.unsqueeze(1)  # データを1次元の畳み込み層に適した形状に変更
-        x = self.conv_net(x)
-        x = self.fc_net(x)
-        return x
-
-
 class MLP(pl.LightningModule):
     def __init__(self, obs_size=544, n_actions=181, hidden_size=128):
         super().__init__()
