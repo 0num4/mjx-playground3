@@ -8,3 +8,8 @@
 *.csv
 *.log
 *.yaml
+
+# viaualization
+*.png
+*.jpg
+*.svg
