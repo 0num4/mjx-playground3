@@ -25,7 +25,7 @@ rank_hist = []
 #     "player_2": agent,
 #     "player_3": "127.0.0.1:9090",
 # }
-run(num_games=1000, agent_addresses={
+run(num_games=10, agent_addresses={
     "player_0": agent,
     "player_1": agent,
     "player_2": agent,
