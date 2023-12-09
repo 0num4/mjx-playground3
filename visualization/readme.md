@@ -51,4 +51,21 @@ env.step()の返り値で帰ってくる1つめのstrとobs.who()は一致して
 obs.draws()で引いてきた牌の情報の履歴が見える
 
 ## state
-stateにもsave_svg()がある。???
+stateにもsave_svg()がある。stateで保存したsvgの場合全てのプレイヤーの牌が見える。
+```
+state = env.state()
+state.save_svg("svg/test.svg")
+```
+
+**state.past_decisions()を使うとなぜかセグフォで落ちたりめちゃくちゃ重い。なんだこのメソッド・・・**
+
+save_svgの山の残りはwallの中にある。
+
+## その他ゲームの情報など
+
+svgの中で使われているMahjongTableを使うと早そう。例えばこれは山の残り枚数。
+```
+            proto_data = obs.to_proto()
+            sample_data = MahjongTable.decode_observation(proto_data)
+            print("sample_data.wall_num: " + str(sample_data.wall_num))
+```
