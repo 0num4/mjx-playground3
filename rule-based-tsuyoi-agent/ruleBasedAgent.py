@@ -5,12 +5,15 @@ env = mjx.MjxEnv()
 agent = RandomAgent()
 obs_dict = env.reset()  # game start
 
-for game in range(100):  # 100半荘回す
+rank_hist = []
+
+for game in range(1000):  # 100半荘回す
     env.reset()  # ゲーム開始
     round = 0
     while not env.done():
         actions = {player_id: agent.act(obs) for player_id, obs in obs_dict.items()}
-        print(actions)
+        # print(actions)
         obs_dict = env.step(actions)
-    env.state()
-    print(env.rewards())
+    # env.state()
+    rank_hist.append(env.rewards())
+print(rank_hist)

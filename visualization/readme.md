@@ -179,6 +179,28 @@ EnvRunner::EnvRunnerは内部でMjxEnv(player_ids_);を呼び出している
 env.resetとかもやってスレッド間で通信してるっぽいね。
 https://github.com/mjx-project/mjx/blob/master/include/mjx/env.cpp#L179
 
+
+pythonのmjx.env.runはagentを4つ取るが、その引数にはGrpcAgentしか受け取らないので、普通にshantenAgentとかは渡せないっぽい。
+```
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization# python speed_eval.py 
+Traceback (most recent call last):
+  File "/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval.py", line 28, in <module>
+    run(num_games=1000, agent_addresses={
+  File "/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/mjx/env.py", line 69, in run
+    agents = {k: _mjx.GrpcAgent(addr) for k, addr in agent_addresses.items()}  # type: ignore
+  File "/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/mjx/env.py", line 69, in <dictcomp>
+    agents = {k: _mjx.GrpcAgent(addr) for k, addr in agent_addresses.items()}  # type: ignore
+TypeError: __init__(): incompatible constructor arguments. The following argument types are supported:
+    1. _mjx.GrpcAgent(arg0: str)
+
+Invoked with: <mjx.agents.RandomAgent object at 0x7ff8bd046d10>
+```
+
+嘘、python.mjx.env.runの中のagentの受け取り変えたら行けてそうな気がする。
+```
+    agents = {k: addr for k, addr in agent_addresses.items()}  # type: ignore
+```
+
 # ゲームの評価と処理速度
 
 ```
