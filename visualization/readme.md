@@ -196,7 +196,7 @@ TypeError: __init__(): incompatible constructor arguments. The following argumen
 Invoked with: <mjx.agents.RandomAgent object at 0x7ff8bd046d10>
 ```
 
-嘘、python.mjx.env.runの中のagentの受け取り変えたら行けてそうな気がする。
+嘘、python.mjx.env.runの中のagentの受け取り変えたら行けてそうな気がする。でも1000で回したからか一切反応ないから死んでそう・・・
 ```
     agents = {k: addr for k, addr in agent_addresses.items()}  # type: ignore
 ```
