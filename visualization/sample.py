@@ -23,15 +23,18 @@ action_hist = []
 for game in range(2):  # 100半荘回す
     env.reset()  # ゲーム開始
     counter = 0
+    round = 0
     while not env.done():
         counter += 1
         actions = {}  # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/action.py#L14
         for player_id, obs in obs_dict.items():
+            if round != obs.round():
+                print(f"round {round} -> {obs.round()}")
+                print("次の局にいきました "+str(obs.round()))
+                round = obs.round()
             # obsはcppのオブジェクトで中は何も見えない
             legal_actions = obs.legal_actions()  # アクションのリストをobsから取ってくる？
             # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/observation.py#L57
-            print("player_id "+player_id)
-            print(str(obs.round()) + "局")
             # # print(legal_actions)
             # print("len(legal_actions) "+str(len(legal_actions)))
             # print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
