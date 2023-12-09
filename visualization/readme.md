@@ -133,3 +133,58 @@ TSUMOGIRI
 とんなんしゃーぺーの順でまぁ回ってくと思うんですがポンとかチーとかできる場合例えば
 player 0123012303みたいにぐるぐるならない。
 行動が出来る人が先にforで回ってくるのでaction.type().name == "RON"の場合historyを取っておいて一番最後のplayer_idを持ってこれば放銃者がわかり、そこから放銃率、ツモ率が計算できる。
+
+# envについて
+
+run()はserver, client通信で使う？普通の対局で使えるのか
+
+普通の対局ではreset()とstep()を使うが。
+
+reset()のcppの処理
+https://github.com/mjx-project/mjx/blob/master/include/mjx/env.cpp#L15
+
+seed_gen_()でseedを作り
+playerをシャッフルし、
+```
+  // initialize state
+  state_ = internal::State(
+      mjx::internal::State::ScoreInfo{shuffled_player_ids, seed.value()});
+```
+してobsを返す
+
+
+step()・・・内部のstateをガチャガチャして返す.
+state.next()で次のゲームに行ってるっぽい。大事なのはstate_.Update(std::move(actions));かなぁ
+```cpp
+std::unordered_map<PlayerId, Observation> MjxEnv::Step(
+    const std::unordered_map<PlayerId, mjx::Action>& action_dict) noexcept {
+  std::unordered_map<PlayerId, Observation> observations;
+
+  if (state_.IsRoundOver() && !state_.IsGameOver()) {
+    auto next_state_info = state_.Next();
+    state_ = mjx::internal::State(next_state_info);
+    return Observe();
+  }
+
+  std::vector<mjxproto::Action> actions;
+  actions.reserve(action_dict.size());
+  for (const auto& [player_id, action] : action_dict)
+    actions.push_back(action.proto());
+  state_.Update(std::move(actions));
+  return Observe();
+}
+```
+
+EnvRunner::EnvRunnerは内部でMjxEnv(player_ids_);を呼び出している
+env.resetとかもやってスレッド間で通信してるっぽいね。
+https://github.com/mjx-project/mjx/blob/master/include/mjx/env.cpp#L179
+
+# ゲームの評価と処理速度
+
+```
+time python speed_eval.py
+[array of 1000 game ranks]
+real    1m25.208s
+user    1m25.328s
+sys     0m0.930s
+```
