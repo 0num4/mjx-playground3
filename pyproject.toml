@@ -17,6 +17,7 @@ torchaudio = {version = "^2.1.1+cu118", source = "torch_cu118"}
 pytorch-lightning = "^2.1.2"
 gym = "^0.26.2"
 gymnasium = {extras = ["box2d"], version = "^0.29.1"}
+loguru = "^0.7.2"
 
 
 [[tool.poetry.source]]
