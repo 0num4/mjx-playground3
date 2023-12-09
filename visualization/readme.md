@@ -80,6 +80,7 @@ env.reset()からenv.reset()の間は1ゲーム。次の局に行ったときの
             print("player_id "+player_id)
             print(str(obs.round()) + "局") #ここの値がすっと変わる。env.done()は局ごとではないため。
 ```
+**done("game")の引数でgameかroundか選べるっぽい**
 
 ```python
 for game in range(2):  # 100半荘回す
