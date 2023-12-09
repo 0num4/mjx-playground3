@@ -39,10 +39,10 @@ for game in range(2):  # 100半荘回す
             print("obs.draws()" + str(obs.draws()))  # drawsが何故か複数ある
             for draw in obs.draws():
                 print("     draw.id()) "+str(draw.id()) + " draw.type() "+str(draw.type()) + " draw.is_red() "+str(draw.is_red()) + " draw.num() "+str(draw.num()))
-            print("obs._repr_html_() ") # svgが出てくる
+            print("obs._repr_html_() ")  # svgが出てくる
             # ファイルに保存
-            with open(f"svg/{counter}_{player_id}.html", mode='w') as file:
-                file.write(obs._repr_html_())
+            # with open(f"svg/{counter}_{player_id}.svg", mode='w') as file:
+            #     file.write(obs._repr_html_())
 
             action = agent.act(obs)  # actionもcpp objなので見えないけどagentが取ったアクションだと思う
             actions[player_id] = action
