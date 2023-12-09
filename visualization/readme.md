@@ -69,3 +69,14 @@ svgの中で使われているMahjongTableを使うと早そう。例えばこ�
             sample_data = MahjongTable.decode_observation(proto_data)
             print("sample_data.wall_num: " + str(sample_data.wall_num))
 ```
+
+## ゲームの進行
+env.reset()からenv.reset()の間は1ゲーム。次の局に行ったときの処理とかはいらずにforの中ですっと始まる。sample.pyのように。
+
+ゲームごとの処理を入れたいときはa = obs.round()でifで次の局に行ったかどうかなどを判定するしかなさそう。
+```python
+    while not env.done():
+        for player_id, obs in obs_dict.items():
+            print("player_id "+player_id)
+            print(str(obs.round()) + "局") #ここの値がすっと変わる。env.done()は局ごとではないため。
+```

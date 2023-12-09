@@ -31,25 +31,26 @@ for game in range(2):  # 100半荘回す
             legal_actions = obs.legal_actions()  # アクションのリストをobsから取ってくる？
             # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/observation.py#L57
             print("player_id "+player_id)
-            # print(legal_actions)
-            print("len(legal_actions) "+str(len(legal_actions)))
-            print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
-            print("obs.curr_hand().shanten_number() " + str(obs.curr_hand().shanten_number()))
-            # print(obs.curr_hand().to_json())
-            print("obs.who()" + str(obs.who()))
-            print("obs.dealer()" + str(obs.dealer()))
-            print("obs.doras()" + str(obs.doras()))
-            print("obs.draws()" + str(obs.draws()))  # drawsが何故か複数ある
-            for draw in obs.draws():
-                print("     draw.id()) "+str(draw.id()) + " draw.type() "+str(draw.type()) + " draw.is_red() "+str(draw.is_red()) + " draw.num() "+str(draw.num()))
-            print("obs._repr_html_() ")  # svgが出てくる
+            print(str(obs.round()) + "局")
+            # # print(legal_actions)
+            # print("len(legal_actions) "+str(len(legal_actions)))
+            # print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
+            # print("obs.curr_hand().shanten_number() " + str(obs.curr_hand().shanten_number()))
+            # # print(obs.curr_hand().to_json())
+            # print("obs.who()" + str(obs.who()))
+            # print("obs.dealer()" + str(obs.dealer()))
+            # print("obs.doras()" + str(obs.doras()))
+            # print("obs.draws()" + str(obs.draws()))  # drawsが何故か複数ある
+            # for draw in obs.draws():
+            #     print("     draw.id()) "+str(draw.id()) + " draw.type() "+str(draw.type()) + " draw.is_red() "+str(draw.is_red()) + " draw.num() "+str(draw.num()))
+            # print("obs._repr_html_() ")  # svgが出てくる
             # ファイルに保存
             # with open(f"svg/{counter}_{player_id}.svg", mode='w') as file:
             #     file.write(obs._repr_html_())
 
             proto_data = obs.to_proto()
             sample_data = MahjongTable.decode_observation(proto_data)
-            print("sample_data.wall_num: " + str(sample_data.wall_num))
+            # print("sample_data.wall_num: " + str(sample_data.wall_num))
 
             action = agent.act(obs)  # actionもcpp objなので見えないけどagentが取ったアクションだと思う
             actions[player_id] = action
@@ -73,8 +74,29 @@ for game in range(2):  # 100半荘回す
         # print(obs_dict[1].curr_hand().shanten_number())
         # print(anystr)
 
-        print("------------for end------------")
-        sleep(1)
+        # print("------------for end------------")
+        # sleep(1)
+        if env.done():
+            print("game end")
+            print(str(obs.round()) + "局")
+            print(str(obs.honba()) + "本場")
+            print(str(obs.dealer()) + "が親")
+            # ゲーム終了時にどうなっているかを見る
+            legal_actions = obs.legal_actions()  # アクションのリストをobsから取ってくる？
+            # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/observation.py#L57
+            print("player_id "+player_id)
+            # print(legal_actions)
+            print("len(legal_actions) "+str(len(legal_actions)))
+            print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
+            print("obs.curr_hand().shanten_number() " + str(obs.curr_hand().shanten_number()))
+            # print(obs.curr_hand().to_json())
+            print("obs.who()" + str(obs.who()))
+            print("obs.dealer()" + str(obs.dealer()))
+            print("obs.doras()" + str(obs.doras()))
+            print("obs.draws()" + str(obs.draws()))  # drawsが何故か複数ある
+            for draw in obs.draws():
+                print("     draw.id()) "+str(draw.id()) + " draw.type() "+str(draw.type()) + " draw.is_red() "+str(draw.is_red()) + " draw.num() "+str(draw.num()))
+            print("game end")
     env.reset()
 
 # ファイルに書き出し
