@@ -218,12 +218,21 @@ https://github.com/mjx-project/speed_benchmark/tree/master
 
 ## 並列処理を使った高速化
 
-
 2分が10秒になった。gpu使えればもっと早くなるかもしれない。
+また、cpu使用率もちゃんと100%になっていた。
 ```
 time python chatgpt-multiprocessing_speed_eval.py
 [array of 1000 game ranks]
 real    0m10.678s
 user    2m37.529s
 sys     0m2.652s
+```
+
+1万局のオーダーも30分が1分ちょいになって大分現実味を帯びた
+```
+time python chatgpt-multiprocessing_speed_eval.py
+[array of 10000 game ranks]
+real    1m41.313s
+user    26m8.795s
+sys     0m3.563s
 ```

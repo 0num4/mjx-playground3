@@ -18,7 +18,7 @@ def play_game(_):
 
 if __name__ == "__main__":
     pool = multiprocessing.Pool()  # プールを使用してプロセスを管理
-    games_to_play = 1000
+    games_to_play = 10000
     results = pool.map(play_game, range(games_to_play))  # 並列処理でゲームを実行
     pool.close()
     pool.join()
