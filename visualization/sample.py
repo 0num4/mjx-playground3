@@ -19,7 +19,7 @@ agent = ShantenAgent()
 
 obs_hist = []
 action_hist = []
-
+all_player_action_hist = []
 for game in range(2):  # 100半荘回す
     env.reset()  # ゲーム開始
     counter = 0
@@ -35,6 +35,22 @@ for game in range(2):  # 100半荘回す
             # obsはcppのオブジェクトで中は何も見えない
             legal_actions = obs.legal_actions()  # アクションのリストをobsから取ってくる？
             # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/observation.py#L57
+            for action in legal_actions:
+                if action.type().name == "TSUMO" or action.type().name == "RON":
+                    print("action.type().name "+str(action.type().name))
+                    print(action.tile().type())
+                    print(action.type().name)
+                    # print(action.to_idx())
+                    # print(action.to_json())
+                    print(player_id)
+                # TSUMO
+                # RON
+                # CHI
+                # PON
+                # ADDED_KAN
+                # OPEN_KAN
+                # DUMMY
+                # PASS
             # # print(legal_actions)
             # print("len(legal_actions) "+str(len(legal_actions)))
             # print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
@@ -67,7 +83,15 @@ for game in range(2):  # 100半荘回す
             #     json.dump(json_data, f)
 
             # obs.save_svg(f"svg/{file_id}.svg")
-            # 選択できるアクションが複数ある場合、obsとactionを保存する
+            # 選択できるアクションが複数ある場合、obsとactionを保存する 
+            all_player_action_hist.append({
+                "player_id": player_id,
+                "action.type().name ": action.type().name,
+                "action.to_idx()": action.to_idx(),
+                "action.to_json()": action.to_json(),
+                "action.tile().type()": str(action.tile().type()) if action.tile() is not None else 'None',
+                # "action.to_json()": action.to_json(),
+            })
             if len(legal_actions) > 1:
                 obs_hist.append(obs.to_features(feature_name="mjx-small-v0").ravel())  # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/observation.py#L111
                 action_hist.append(action.to_idx())

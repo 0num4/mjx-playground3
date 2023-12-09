@@ -80,3 +80,55 @@ env.reset()からenv.reset()の間は1ゲーム。次の局に行ったときの
             print("player_id "+player_id)
             print(str(obs.round()) + "局") #ここの値がすっと変わる。env.done()は局ごとではないため。
 ```
+
+```python
+for game in range(2):  # 100半荘回す
+    env.reset()  # ゲーム開始
+    round = 0
+    while not env.done():
+        for player_id, obs in obs_dict.items():
+            if round != obs.round():
+                print(f"round {round} -> {obs.round()}")
+                print("次の局にいきました "+str(obs.round()))
+                round = obs.round()
+```
+
+## 放銃率、ツモ率などの計算
+
+legal_actions()で行動できるactionsが取れるがdiscardがたくさんある。これは捨てる牌ごとにあるので13個ぐらいあると思う。
+```
+for action in legal_actions:
+    print(action.tile().type())
+    print(action.type().name)
+```
+```
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+DISCARD
+<bound method Tile.type of <mjx.tile.Tile object at 0x7f90546e6b20>>
+TSUMOGIRI
+```
+
+# for player_id, obs in obs_dict.items():について。
+とんなんしゃーぺーの順でまぁ回ってくと思うんですがポンとかチーとかできる場合例えば
+player 0123012303みたいにぐるぐるならない。
+行動が出来る人が先にforで回ってくるのでaction.type().name == "RON"の場合historyを取っておいて一番最後のplayer_idを持ってこれば放銃者がわかり、そこから放銃率、ツモ率が計算できる。
