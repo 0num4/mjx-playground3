@@ -210,3 +210,8 @@ real    1m25.208s
 user    1m25.328s
 sys     0m0.930s
 ```
+
+100半荘だとshantenAgentで20秒ほど。
+
+処理速度についてはmjx projectの別のリポジトリにもある。(ruby-mjaiとの比較だからあんま意味ないけど・・・)
+https://github.com/mjx-project/speed_benchmark/tree/master
