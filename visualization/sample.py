@@ -30,11 +30,20 @@ for game in range(2):  # 100半荘回す
             print("player_id "+player_id)
             # print(legal_actions)
             print("len(legal_actions) "+str(len(legal_actions)))
-            print("obs.curr_hand().to_json()"+str(obs.curr_hand().to_json()))
+            print("obs.curr_hand().to_json() "+str(obs.curr_hand().to_json()))
+            print("obs.curr_hand().shanten_number() " + str(obs.curr_hand().shanten_number()))
             # print(obs.curr_hand().to_json())
             print("obs.who()" + str(obs.who()))
             print("obs.dealer()" + str(obs.dealer()))
             print("obs.doras()" + str(obs.doras()))
+            print("obs.draws()" + str(obs.draws()))  # drawsが何故か複数ある
+            for draw in obs.draws():
+                print("     draw.id()) "+str(draw.id()) + " draw.type() "+str(draw.type()) + " draw.is_red() "+str(draw.is_red()) + " draw.num() "+str(draw.num()))
+            print("obs._repr_html_() ") # svgが出てくる
+            # ファイルに保存
+            with open(f"svg/{counter}_{player_id}.html", mode='w') as file:
+                file.write(obs._repr_html_())
+
             action = agent.act(obs)  # actionもcpp objなので見えないけどagentが取ったアクションだと思う
             actions[player_id] = action
             # obs.show_svg()
@@ -54,7 +63,7 @@ for game in range(2):  # 100半荘回す
         # print(actions)  # player_0しか入ってない・・・actionは1行動でstep()を刻むことで次の打牌とかツモになるっぽい
         obs_dict = env.step(actions)  # https://github.com/mjx-project/mjx/blob/fcdac0eabf854c2a530168eda989479f41681ef9/mjx/env.py#L25
         # print(obs["player_3"].save_svg(f"svg/{obs['player_3'].}.svg"))
-        print(obs_dict[player_id].curr_hand().shanten_number())
+        # print(obs_dict[1].curr_hand().shanten_number())
         # print(anystr)
         print("------------for end------------")
         sleep(1)

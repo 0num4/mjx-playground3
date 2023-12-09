@@ -25,15 +25,15 @@ This function only works in Jupyter Notebook.Traceback (most recent call last):
 obsに大体の情報が入っている。
 
 ```
-print("player_id "+player_id)
-# print(legal_actions)
-print("legal_actions"+str(len(legal_actions)))
-print("obs.curr_hand().to_json()")
-print(obs.curr_hand().to_json())
-# print(obs.curr_hand().to_json())
-print("obs.who()" + str(obs.who()))
-print("obs.dealer()" + str(obs.dealer()))
-print("obs.doras()" + str(obs.doras()))
+player_id player_0
+len(legal_actions) 14
+obs.curr_hand().to_json() {"closedTiles":[20,27,36,44,51,52,55,58,70,73,100,107,127,129]}
+obs.curr_hand().shanten_number() 3
+obs.who()0
+obs.dealer()0
+obs.doras()[10]
+obs.draws()[<mjx.tile.Tile object at 0x7f108ece00a0>]
+draw.id() 73 draw.type() TileType.S1 draw.is_red() False draw.num() 1
 ```
 
 ## env, obs, actionの関係
@@ -43,3 +43,7 @@ print("obs.doras()" + str(obs.doras()))
 `for player_id, obs in obs_dict.items(): `
 
 env.step()の返り値で帰ってくる1つめのstrとobs.who()は一致してそう
+
+
+## obsの中身
+大体使えそうなのは上のメソッドあたり。
