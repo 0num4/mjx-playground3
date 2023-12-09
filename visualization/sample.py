@@ -74,12 +74,6 @@ for game in range(2):  # 100半荘回す
         # print(anystr)
 
         print("------------for end------------")
-        # state = env.state()
-        # a = state.past_decisions()  # 何故か死ぬほど重い　# 罠メソッドなので実行しちゃだめ！！落ちたりフリーズする
-        # for i in a:
-        #     print("past_decisions")
-        #     print(i)
-
         sleep(1)
     env.reset()
 
