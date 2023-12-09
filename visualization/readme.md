@@ -215,3 +215,15 @@ sys     0m0.930s
 
 処理速度についてはmjx projectの別のリポジトリにもある。(ruby-mjaiとの比較だからあんま意味ないけど・・・)
 https://github.com/mjx-project/speed_benchmark/tree/master
+
+## 並列処理を使った高速化
+
+
+2分が10秒になった。gpu使えればもっと早くなるかもしれない。
+```
+time python chatgpt-multiprocessing_speed_eval.py
+[array of 1000 game ranks]
+real    0m10.678s
+user    2m37.529s
+sys     0m2.652s
+```
