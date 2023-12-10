@@ -12,3 +12,5 @@ https://note.com/oshizo/n/nbbcfb4e24908
 * [ ] 可視化
 * [ ] 放縦率などの計算
 * [ ] マンピンソー、フウロ、リーチなど分けて学習(luckeyjなど)
+* [ ] 3p対応
+* [ ] gpuによるevalの高速化

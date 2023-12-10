@@ -173,3 +173,8 @@ cnn系のエージェントがそもそも動かなくて困ってる。
 ## battle_vs_shantenbots.py系
 
 * mlp_agent_playground.py・・・これが最終的に古い自分の作ったエージェントとバトル出来たコード
+
+
+## mjxに標準搭載されている学習について
+https://github.com/mjx-project/mjx/tree/fcdac0eabf854c2a530168eda989479f41681ef9/workspace/suphx-reward-shaping
+mlpで各局ごとに学習させている。
