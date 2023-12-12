@@ -236,3 +236,196 @@ real    1m41.313s
 user    26m8.795s
 sys     0m3.563s
 ```
+
+# codonを使った高速化
+codonもgpu使えるしpythonのjitコンパイラなので特に手を入れる必要がないはず。
+
+https://github.com/exaloop/codon
+wsl上もこれでインストール出来た。
+```
+/bin/bash -c "$(curl -fsSL https://exaloop.io/install.sh)"
+```
+
+初期状態だとpoetryの環境は認識されず、mjxが無いといわれる。
+----
+
+うまくpoetryの環境が認識出来ず、別環境で一回poetry newしてそこでcodon run hoge.pyした。python3.11と比べても引けを取らない速さ。
+```
+(3.11.4) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/test/codontest# python helloworld.py 
+ackermann(3, 11) = 16381
+elapsed time: 14128 [ms]
+(3.11.4) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/test/codontest# codon run helloworld.py 
+helloworld.py:5:1-33: error: cannot import name 'setrecursionlimit' from 'sys'
+(3.11.4) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/test/codontest# codon run helloworld.py 
+ackermann(3, 11) = 16381
+elapsed time: 318 [ms]
+(3.11.4) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/test/codontest# python --version
+Python 3.11.4
+(3.11.4) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/test/codontest# 
+```
+
+## なんかガチャガチャやったら動いた
+ただmjx.agents import RandomAgentみたいなインポート方法がわからない
+time codon run visualization/speed_eval.py 
+```python
+# https://note.com/oshizo/n/nbbcfb4e24908
+from python import mjx
+# from python import mjx.agents.RandomAgent
+# from mjx.env import run
+env = mjx.MjxEnv()
+agent = mjx.agents.RandomAgent()
+obs_dict = env.reset()  # game start
+# print(obs_dict)
+rank_hist = []
+
+for game in range(100):  # 100半荘回す
+    env.reset()  # ゲーム開始
+    round = 0
+    while not env.done():
+        actions = {player_id: agent.act(obs) for player_id, obs in obs_dict.items()}
+        # print(actions)
+        obs_dict = env.step(actions)
+    # env.state()
+    rank_hist.append(env.rewards())
+print(rank_hist)
+
+```
+
+速度を比較してみたんですが100半荘だとcodonが12sでpythonが8sだった。草。高速化とは。
+
+とりあえずまた1000半荘で比較。
+
+python:
+cpuは10-20%前後。
+real    1m21.140s
+user    1m21.195s
+sys     0m1.030s
+
+codon:
+time codon run visualization/speed_eval_codon.py
+こちらもcpuは10-20%前後。
+real    1m39.720s
+user    1m36.845s
+sys     0m4.834s
+
+はい。草。
+
+___
+アッカーマン関数で比較してみる。
+```
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# python visualization/akkaman.py 
+ackermann(3, 11) = 16381
+elapsed time: 30936 [ms]
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# codon run visualization/akkaman.py 
+ackermann(3, 11) = 16381
+elapsed time: 336 [ms]
+```
+
+やっぱ生のpythonだと効果出てそうだけどね。
+
+# numbaを使った高速化
+まぁアッカーマン関数なら一瞬。
+```
+(base) root ➜ /workspaces/vscode-devcontainer-test (feat/cppdebug) $ python sample.py 
+ackermann(3, 11) = 16381
+elapsed time: 15355 [ms]
+(base) root ➜ /workspaces/vscode-devcontainer-test (feat/cppdebug) $ python sample.py 
+/workspaces/vscode-devcontainer-test/sample.py:9: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  @jit
+ackermann(3, 11) = 16381
+elapsed time: 1038 [ms]
+```
+
+wsl上のpoetryでも特に問題なく一瞬でインストール&実行できた。
+```
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# python visualization/akkaman.py 
+/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/akkaman.py:10: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  def ackermann(m: int, n: int) -> int:
+ackermann(3, 11) = 16381
+elapsed time: 1546 [ms]
+```
+
+1000半荘回す奴でもimport numba出来てまぁwarnは出てるが普通に動いてそう。
+```
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# python visualization/speed_eval_numba.py 
+/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py:8: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  def main():
+/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py:7: NumbaWarning: 
+Compilation is falling back to object mode WITH looplifting enabled because Function "main" failed type inference due to: Unknown attribute 'MjxEnv' of type Module(<module 'mjx' from '/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/mjx/__init__.py'>)
+
+File "visualization/speed_eval_numba.py", line 9:
+def main():
+    env = mjx.MjxEnv()
+    ^
+
+During: typing of get attribute at /mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py (9)
+
+File "visualization/speed_eval_numba.py", line 9:
+def main():
+    env = mjx.MjxEnv()
+    ^
+
+  @jit
+/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py:7: NumbaWarning: 
+Compilation is falling back to object mode WITHOUT looplifting enabled because Function "main" failed type inference due to: Cannot determine Numba type of <class 'numba.core.dispatcher.LiftedLoop'>
+
+File "visualization/speed_eval_numba.py", line 15:
+def main():
+    <source elided>
+
+    for game in range(1000):  # 100半荘回す
+    ^
+
+```
+
+time python visualization/speed_eval_numba.py
+特に変わらないねぇ
+real    1m22.179s
+user    1m22.581s
+sys     0m1.801s
+
+https://qiita.com/tariaki/items/83a9115d672fe9c3becb
+
+numbaが遅い原因は大体理解した。
+```
+(mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# time python visualization/speed_eval_numba.py 
+Traceback (most recent call last):
+  File "/mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py", line 27, in <module>
+    main()
+  File "/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/numba/core/dispatcher.py", line 468, in _compile_for_args
+    error_rewrite(e, 'typing')
+  File "/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/numba/core/dispatcher.py", line 409, in error_rewrite
+    raise e.with_traceback(None)
+numba.core.errors.TypingError: Failed in nopython mode pipeline (step: nopython frontend)
+Unknown attribute 'MjxEnv' of type Module(<module 'mjx' from '/root/.cache/pypoetry/virtualenvs/mjx-playground-S0ozRpda-py3.9/lib/python3.9/site-packages/mjx/__init__.py'>)
+
+File "visualization/speed_eval_numba.py", line 9:
+def main():
+    env = mjx.MjxEnv()
+    ^
+
+During: typing of get attribute at /mnt/c/Users/Owner/work/private/mahjong/mjx-playground/visualization/speed_eval_numba.py (9)
+
+File "visualization/speed_eval_numba.py", line 9:
+def main():
+    env = mjx.MjxEnv()
+    ^
+
+ChatGPT
+
+エラーメッセージは、NumbaがmjxモジュールのMjxEnvクラスを認識できないことを示しています。これは、Numbaのnopythonモードでは、特定の外部モジュールやその属性が認識されないため発生する可能性があります。Numbaのnopythonモードは、PythonのオブジェクトやPython C APIに依存しないコードのコンパイルを試みますが、すべてのPythonモジュールや関数がnopythonモードで動作するわけではありません。
+
+この問題を解決するためには、MjxEnvがNumbaと互換性のある方法で実装されているかを確認するか、MjxEnvを使用する部分をNumbaのデコレータから除外する必要があります。また、Numbaのドキュメントで互換性に関する詳細情報を確認することも有効です。
+
+
+```
+
+# codonをビルドしてみる
+codon build -o spdevl visualization/speed_eval_codon.py
+real    1m39.123s
+user    1m36.869s
+sys     0m4.899s
+
+コンパイルしても速度変わらないが。
+
+**codonをgpu上で動かすにはソースからコンパイルする必要があるが、それにはllvmなどいろいろ必要があるらしく、普通に終わった(vs-code-dev-container-testにある)**

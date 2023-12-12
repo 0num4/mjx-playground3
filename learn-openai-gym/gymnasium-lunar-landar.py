@@ -10,11 +10,10 @@ for _ in range(1000):
     # 0: 何もしない 1: 右から火が出る(左に回転する) 2: 真下から火が出る(当然上に行く) 3: 左から火が出る(右に回転する)
     # action = 2
     observation, reward, terminated, truncated, info = env.step(action)
-    # print(
-    #     "staped"
-    # )
+    # obsの値は、船体の位置、速度、角度、角速度、脚の接触情報、旗の位置、速度、角度、角速度、旗と船体の距離、旗と船体の角度、旗と船体の角速度など
+    print(reward)
     if truncated:
-        print("旗の間に着地出来た")  # 嘘っぽい
+        print("旗の間に着地出来た")  # 嘘っぽい、このゲームでは仕様上常にfalseらしい。
         observation, info = env.reset()
     if terminated:
         observation, info = env.reset()
