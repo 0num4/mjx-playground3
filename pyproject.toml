@@ -20,7 +20,7 @@ gymnasium = {extras = ["box2d"], version = "^0.29.1"}
 optuna = "^3.4.0"
 numba = "^0.58.1"
 transformers = "^4.36.0"
-fireworks-ai = "^0.9.0"
+fireworks-ai = "^0.14.0"
 
 
 [[tool.poetry.source]]
