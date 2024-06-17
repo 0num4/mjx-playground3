@@ -9,7 +9,7 @@ packages = [{include = "mjx_playground"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 mjx = "^0.1.0"
-numpy = "^1.26.2"
+numpy = "^2.0.0"
 tqdm = "^4.66.1"
 torch = {version = "^2.1.1+cu118", source = "torch_cu118"}
 torchvision = {version = "^0.16.1+cu118", source = "torch_cu118"}
