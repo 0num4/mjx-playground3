@@ -42,3 +42,17 @@ And because gymnasium (0.29.1) depends on gymnasium (0.29.1)
 So, because mjx-playground depends on both gymnasium (^0.29.1) and agilerl (^0.1.19), version solving failed.
 (mjx-playground-S0ozRpda-py3.9) root@DESKTOP-2TQ96U5:/mnt/c/Users/Owner/work/private/mahjong/mjx-playground# 
 ```
+
+## DQN
+pytorchではいつも通りnn.moduleを継承してモデルを作る。
+https://qiita.com/Rowing0914/items/eeba790401bcaf2c723c
+https://www.dskomei.com/entry/2021/10/05/140156
+
+dqnではmseを使うので、mseを使うためにはnn.moduleを継承してモデルを作る必要がある。
+dqnでは予想されたQ値と実際のQ値の差を損失関数で計算する。
+
+rainforceではポリシー勾配法(policy grad method)が使用される
+
+dqnではバッファ(メモリ)(履歴を保存する場所)が必要
+q学習ではテーブルが必要。
+テーブルは特徴料(
