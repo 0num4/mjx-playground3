@@ -29,6 +29,14 @@ name = "torch_cu118"
 url = "https://download.pytorch.org/whl/cu118"
 priority = "explicit"
 
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+ruff = "^0.4.10"
+flake8 = "^7.1.0"
+isort = "^5.13.2"
+pytest = "^8.2.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
