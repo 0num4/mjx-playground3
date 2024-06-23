@@ -1,22 +1,23 @@
 [tool.poetry]
 name = "mjx-playground"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "mjx-playground. learn mjx and pytorch, gymnasium etc."
+license = "MIT"
+authors = ["0num4 <r.oonuma@matsuri-tech.com>"]
 readme = "README.md"
-packages = [{include = "mjx_playground"}]
+packages = [{ include = "mjx_playground" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 mjx = "^0.1.0"
 numpy = "^1.26.2"
 tqdm = "^4.66.1"
-torch = {version = "^2.1.1+cu118", source = "torch_cu118"}
-torchvision = {version = "^0.16.1+cu118", source = "torch_cu118"}
-torchaudio = {version = "^2.1.1+cu118", source = "torch_cu118"}
+torch = { version = "^2.1.1+cu118", source = "torch_cu118" }
+torchvision = { version = "^0.16.1+cu118", source = "torch_cu118" }
+torchaudio = { version = "^2.1.1+cu118", source = "torch_cu118" }
 pytorch-lightning = "^2.1.2"
 gym = "^0.26.2"
-gymnasium = {extras = ["box2d"], version = "^0.29.1"}
+gymnasium = { extras = ["box2d"], version = "^0.29.1" }
 optuna = "^3.4.0"
 numba = "^0.58.1"
 transformers = "^4.36.0"
