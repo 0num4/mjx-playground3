@@ -3,6 +3,7 @@
 *.ckpt
 *.pyc
 *.json
+!.vscode/*
 
 # pytorch learning
 *.csv
