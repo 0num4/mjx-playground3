@@ -1,0 +1,23 @@
+name: "python-lint"
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry
+      - name: Set up Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ./awesome-poetry-cache/pyproject.toml
+          cache: "poetry"
+      # - run: echo '${{ toJSON(steps.setup-python.outputs) }}'
+      - run: echo 'cache hit ${{ steps.setup-python.outputs.cache-hit }}'
+      - name: print python version
+        run: python --version
+      - name: Install dependencies
+        run: poetry install --with dev
